@@ -175,7 +175,7 @@ const EditorPage = () => {
                   <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
                     <Check size={20} />
                   </div>
-                  <h3 className="text-xl font-bold text-white uppercase tracking-tight">Sync Complete</h3>
+                  <h3 className="text-xl font-bold text-white uppercase tracking-tight">已上傳至雲端</h3>
                 </div>
                 <button onClick={() => setShowShareModal(false)} className="text-white/20 hover:text-white transition-colors p-2"><X size={24}/></button>
               </div>
@@ -263,6 +263,7 @@ const EditorPage = () => {
                   handleEditorDidMount(editor, monaco);
 
                   document.fonts.ready.then(() => {
+                    monaco.editor.remeasureFonts();
                     editor.layout();
                   });
 
