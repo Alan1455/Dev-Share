@@ -38,7 +38,7 @@ Dev-Share 是一個專為開發者打造的即時代碼分享工具。整合了�
 ### 本地開發環境
 1. 克隆專案：
     ```bash
-    git clone [https://github.com/alan1455/Dev-Share.git](https://github.com/alan1455/Dev-Share.git)
+    git clone https://github.com/alan1455/Dev-Share.git
     ```
 2. 安裝依賴：
     ```bash
