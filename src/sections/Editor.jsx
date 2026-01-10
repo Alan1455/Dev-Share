@@ -235,7 +235,6 @@ const EditorPage = () => {
               theme="vs-dark"
               language={language}
               value={code}
-              onMount={handleEditorDidMount}
               onChange={(v) => {
                 setCode(v || '');
                 setIsDirty(true);
@@ -255,6 +254,24 @@ const EditorPage = () => {
                 wordWrap: "on",
                 renderLineHighlight: "all",
                 selectionHighlight: true,
+                fixedOverflowWidgets: true,
+                letterSpacing: 0,
+                disableLayerHinting: true, 
+                matchBrackets: "always",
+              }}
+              onMount={(editor, monaco) => {
+                  handleEditorDidMount(editor, monaco);
+
+                  document.fonts.ready.then(() => {
+                    editor.layout();
+                  });
+
+                  const resizeObserver = new ResizeObserver(() => {
+                    editor.layout();
+                  });
+
+                  const container = editor.getDomNode()?.parentElement;
+                  if (container) resizeObserver.observe(container);
               }}
             />
           </div>
