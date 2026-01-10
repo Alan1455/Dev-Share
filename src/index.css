@@ -93,16 +93,25 @@ body::after {
   background: var(--accent-blue);
 }
 
-.monaco-editor .view-overlays .current-line {
-  border: none !important;
+.monaco-editor, .monaco-editor .view-lines, .monaco-editor .view-line {
+    font-family: 'JetBrains Mono', monospace !important;
 }
 
-.monaco-editor .view-line {
-  white-space: pre !important;
-  contain: strict;
+.monaco-editor .view-overlays .current-line {
+    border: none !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.monaco-editor .margin, .monaco-editor .monaco-scrollable-element {
+    contain: none !important;
 }
 
 .monaco-editor .selected-text {
-  background-color: rgba(59, 130, 246, 0.3) !important;
+    background-color: rgba(59, 130, 246, 0.4) !important;
+    z-index: 1 !important;
+}
+
+.monaco-editor .view-line span {
+    display: inline-block;
 }
 

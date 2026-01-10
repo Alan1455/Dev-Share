@@ -157,7 +157,7 @@ const EditorPage = () => {
     }
   }, [id]);
 
-  const shareUrl = `${window.location.origin}/Dev-Share/editor?id=${id}`;
+  const shareUrl = `${window.location.origin}/Dev-Share/#/editor?id=${id}`;
 
   if (loadingAuth) return <div className="h-screen bg-[#050505] flex items-center justify-center font-mono text-white/20 uppercase tracking-widest">Booting Editor...</div>;
 
