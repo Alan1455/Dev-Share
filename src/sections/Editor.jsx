@@ -246,7 +246,7 @@ const EditorPage = () => {
                 lineHeight: 24,
                 minimap: { enabled: false },
                 automaticLayout: true,
-                fontFamily: "'Fira Code', 'JetBrains Mono', monospace",
+                fontFamily: "'JetBrains Mono', monospace",
                 cursorBlinking: "expand",
                 cursorSmoothCaretAnimation: "on",
                 lineNumbersMinChars: 4,
