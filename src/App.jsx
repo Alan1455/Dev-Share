@@ -50,7 +50,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/editor" element={<EditorPage />} />
-          <Route path="/Dev-Share/editor" element={<EditorPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </AnimatePresence>
@@ -62,6 +61,7 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
 
