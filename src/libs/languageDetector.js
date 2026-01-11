@@ -93,7 +93,7 @@ class LanguageDetector {
     const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     const [topLang, topScore] = sorted[0];
 
-    console.log("[Detect Scores]:", scores);
+    // console.log("[Detect Scores]:", scores);
 
     if (topScore > 0) {
         this.lastDetected = topLang;
