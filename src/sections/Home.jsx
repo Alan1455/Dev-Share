@@ -35,7 +35,13 @@ const Home = () => {
                     return {
                         id: doc.id,
                         ...data,
-                        displayDate: data.updatedAt ? data.updatedAt.toDate().toLocaleDateString() : 'Just now'
+                        displayDate: data.updatedAt ? data.updatedAt.toDate().toLocaleString('zh-TW', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : 'Just now'
                     };
                 });
                 setUserSnippets(fetched);
@@ -58,10 +64,10 @@ const Home = () => {
 
     const handleCopyLink = (e, snippetId) => {
         e.stopPropagation();
-        const shareUrl = `${window.location.origin}${window.location.pathname}#/editor?id=${snippetId}`;
-
+        const shareUrl = `${window.location.origin}/#/editor?id=${snippetId}`;
         navigator.clipboard.writeText(shareUrl);
         toast.success('連結已複製到剪貼簿', {
+            id: 'copy-success',
             icon: '🔗',
             style: {
                 borderRadius: '12px',
@@ -74,7 +80,6 @@ const Home = () => {
 
     const handleConfirmDelete = async () => {
         if (!deleteTarget) return;
-        
         try {
             await deleteDoc(doc(db, "snippets", deleteTarget));
             setUserSnippets(prev => prev.filter(s => s.id !== deleteTarget));
