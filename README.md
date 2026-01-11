@@ -7,7 +7,7 @@ Dev-Share 是一個專為開發者打造的即時代碼分享工具。整合了�
 
 * **專業編輯體驗**：採用 **Monaco Editor** (VS Code 核心)，支援代碼高亮、自動補全。
 * **雲端同步 (Cloud Sync)**：整合 **Firebase Firestore**，一鍵上傳並生成永久分享連結。
-* **智能語言偵測**：自動識別 JavaScript, Python, HTML, CSS 等多種語言模式。
+* **智能語言偵測**：自動識別 Java, JavaScript, Python, Typescript, C++, C#, Go, Rust 等多種現代語言。
 * **等級與額度系統**：
     * **Guest (訪客)**：可儲存 5 篇，單篇上限 500 字。
     * **Member (登入用戶)**：可儲存 30 篇，單篇上限 5,000 字。
