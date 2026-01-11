@@ -184,7 +184,6 @@ const Home = () => {
                                 <button 
                                     onClick={(e) => handleCopyLink(e, item.id)}
                                     className="p-2 rounded-xl text-white/20 hover:text-blue-400 hover:bg-blue-500/10 transition-all duration-300 opacity-0 group-hover:opacity-100"
-                                    title="複製分享連結"
                                 >
                                     <Copy size={16} />
                                 </button>
