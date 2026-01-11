@@ -5,16 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { db, auth } from '../firebase';
 import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { 
-    ChevronLeft, 
-    Zap, 
-    Terminal, 
-    Code2, 
-    Copy, 
-    Check, 
-    X, 
-    ShieldAlert 
-} from 'lucide-react';
+import { ChevronLeft, Zap, Terminal, Code2, Copy, Check, X, ShieldAlert, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 
@@ -23,16 +14,27 @@ const EditorPage = () => {
     const navigate = useNavigate();
     const [user, loadingAuth] = useAuthState(auth);
     const [userProfile, setUserProfile] = useState(null);
-    const [code, setCode] = useState('');
+    const [code, setCode] = useState('// Code something here...');
     const [status, setStatus] = useState('Ready');
     const [isDirty, setIsDirty] = useState(false);
     const [language, setLanguage] = useState('javascript');
     const [showShareModal, setShowShareModal] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [randomTip, setRandomTip] = useState('');
     const id = searchParams.get('id');
     const editorRef = useRef(null);
 
+    const securityTips = useMemo(() => [
+        "請勿上傳個人敏感資訊（密碼、私鑰、地址）。",
+        "公開連結可被任何人查看，分享前請務必確認代碼內容。",
+        "建議移除代碼中的 API Keys 或測試環境憑證。",
+        "代碼片段一經上傳，請避免包含商業機密或未授權代碼。",
+        "養成良好習慣：在分享前將機密資訊環境變數化。"
+    ], []);
+
     useEffect(() => {
+        const randomIndex = Math.floor(Math.random() * securityTips.length);
+        setRandomTip(securityTips[randomIndex]);
         if (user) {
             const fetchProfile = async () => {
                 const snap = await getDoc(doc(db, "users", user.uid));
@@ -211,6 +213,11 @@ const EditorPage = () => {
                         </div>
                         <span className="text-sm font-mono text-white/80 truncate max-w-[200px]">{id || 'NEW_UNSAVED_DRAFT'}</span>
                     </div>
+                </div>
+
+                <div className="hidden lg:flex items-center gap-3 px-4 py-2 bg-white/5 rounded-xl border border-white/5 max-w-md">
+                    <AlertTriangle size={14} className="text-amber-500 shrink-0" />
+                    <span className="text-[11px] text-white/40 font-medium leading-tight">{randomTip}</span>
                 </div>
 
                 <div className="flex items-center gap-6">
