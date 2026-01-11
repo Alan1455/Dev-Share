@@ -64,7 +64,7 @@ const Home = () => {
 
     const handleCopyLink = (e, snippetId) => {
         e.stopPropagation();
-        const shareUrl = `${window.location.origin}/#/editor?id=${snippetId}`;
+        const shareUrl = `${window.location.origin}/Dev-Share/#/editor?id=${snippetId}`;
         navigator.clipboard.writeText(shareUrl);
         toast.success('連結已複製到剪貼簿', {
             id: 'copy-success',
