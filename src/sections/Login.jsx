@@ -4,7 +4,7 @@ import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { motion } from 'framer-motion';
-import { LogIn, LogOut, User, Crown, ShieldCheck, Zap } from 'lucide-react';
+import { LogIn, LogOut, User, Crown, ShieldCheck, Zap, Github } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 
@@ -119,6 +119,30 @@ const Login = () => {
                     </div>
                 )}
             </motion.div>
+            <footer className="fixed bottom-8 left-0 w-full flex flex-col items-center gap-4 z-20">
+                <motion.a 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                    href="https://github.com/Alan1455/Dev-Share"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-md hover:bg-white hover:border-white transition-all duration-500"
+                >
+                    <Github size={14} className="text-white/40 group-hover:text-black transition-colors" />
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 group-hover:text-black transition-colors">
+                        Source Code
+                    </span>
+                </motion.a>
+                <div className="text-center">
+                    <p className="text-[11px] font-mono text-white/40 tracking-[0.4em]">
+                        ©2026 Alan1455.
+                    </p>
+                    <p className="text-[10px] font-mono text-white/40 tracking-[0.2em] mt-1">
+                        All Rights Reserved.
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 };
