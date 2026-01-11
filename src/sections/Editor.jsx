@@ -149,14 +149,14 @@ const EditorPage = () => {
         setTimeout(() => setStatus('Ready'), 2000);
     }, []);
 
-    const detectLanguage = (c) => {
+    const detectLanguage = useCallback((c) => {
         const val = c.toLowerCase();
         if (val.includes('import ') || val.includes('const ') || val.includes('function ')) return 'javascript';
         if (val.includes('def ') || val.includes('print(')) return 'python';
         if (val.includes('<html') || val.includes('</div>')) return 'html';
         if (val.includes('{') && val.includes('margin:')) return 'css';
         return 'javascript';
-    };
+    }, []);
 
     const handleEditorDidMount = (editor, monaco) => {
         editorRef.current = editor;
@@ -171,8 +171,17 @@ const EditorPage = () => {
             }
         });
         monaco.editor.setTheme('dev-share-dark');
+        editor.focus();
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
             handleLocalSave();
+        });
+        editor.onKeyDown((e) => {
+            if (e.keyCode === monaco.KeyCode.Space) {
+                e.stopPropagation();
+            }
+        });
+        editor.onMouseDown(() => {
+            editor.focus();
         });
         setTimeout(() => editor.layout(), 100);
     };
@@ -287,6 +296,7 @@ const EditorPage = () => {
                                 selectionHighlight: true,
                                 fixedOverflowWidgets: true,
                                 matchBrackets: "always",
+                                readOnly: false,
                             }}
                             onMount={(editor, monaco) => {
                                 handleEditorDidMount(editor, monaco);
