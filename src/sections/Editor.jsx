@@ -8,6 +8,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { ChevronLeft, Zap, Terminal, Code2, Copy, Check, X, ShieldAlert, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { generateSecureId, validateId } from '../libs/idGenerator';
+import { languageDetector } from '../libs/languageDetector';
+
 
 const EditorPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -59,6 +61,23 @@ const EditorPage = () => {
         if (level === 'member') return { type: 'MEMBER', count: 30, chars: 5000 };
         return { type: 'GUEST', count: 5, chars: 500 };
     }, [userProfile]);
+
+    const handleEditorChange = async (value) => {
+        setCode(value || '');
+        setIsDirty(true);
+        if (editorRef.current) {
+            clearTimeout(editorRef.current);
+        }
+        editorRef.current = setTimeout(async () => {
+            if (!value || value.trim().length < 20) return;
+            setStatus('Ready');
+            const detected = await languageDetector.detect(value);
+            if (detected && detected !== language) {
+                setLanguage(detected);
+            }
+        }, 600);
+        setStatus('Detecting...');
+    };
 
     useEffect(() => {
         if (!id || id === 'new-file') return;
@@ -147,15 +166,6 @@ const EditorPage = () => {
         setStatus('Saved(Local)');
         toast('草稿已暫存！', { icon: '💾' });
         setTimeout(() => setStatus('Ready'), 2000);
-    }, []);
-
-    const detectLanguage = useCallback((c) => {
-        const val = c.toLowerCase();
-        if (val.includes('import ') || val.includes('const ') || val.includes('function ')) return 'javascript';
-        if (val.includes('def ') || val.includes('print(')) return 'python';
-        if (val.includes('<html') || val.includes('</div>')) return 'html';
-        if (val.includes('{') && val.includes('margin:')) return 'css';
-        return 'javascript';
     }, []);
 
     const handleEditorDidMount = (editor, monaco) => {
@@ -278,7 +288,7 @@ const EditorPage = () => {
                             onChange={(v) => {
                                 setCode(v || '');
                                 setIsDirty(true);
-                                setLanguage(detectLanguage(v || ''));
+                                handleEditorChange(v);
                             }}
                             options={{
                                 fontSize: 16,
