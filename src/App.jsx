@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './sections/Home';
 import Login from './sections/Login';
 import EditorPage from './sections/Editor';
+import NotFound from './sections/NotFound';
 
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/editor" element={<EditorPage />} />
-                    <Route path="*" element={<Home />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </AnimatePresence>
 

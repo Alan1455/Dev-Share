@@ -7,7 +7,7 @@ import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ChevronLeft, Zap, Terminal, Code2, Copy, Check, X, ShieldAlert, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
-
+import { generateSecureId, validateId } from '../libs/idGenerator';
 
 const EditorPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -51,7 +51,7 @@ const EditorPage = () => {
             };
             fetchProfile();
         }
-    }, [user]);
+    }, [user, securityTips]);
 
     const limits = useMemo(() => {
         const level = userProfile?.level || 'guest';
@@ -59,6 +59,32 @@ const EditorPage = () => {
         if (level === 'member') return { type: 'MEMBER', count: 30, chars: 5000 };
         return { type: 'GUEST', count: 5, chars: 500 };
     }, [userProfile]);
+
+    useEffect(() => {
+        if (!id || id === 'new-file') return;
+        const load = async () => {
+            if (!validateId(id)) {
+                toast.error("無效的代碼連結格式", { id: "invalid-id" });
+                setSearchParams({});
+                return;
+            }
+            try {
+                const snap = await getDoc(doc(db, "snippets", id));
+                if (snap.exists()) {
+                    setCode(snap.data().code || '');
+                    setLanguage(snap.data().language || 'javascript');
+                    setIsDirty(false);
+                } else {
+                    toast.error("找不到該代碼片段", { id: "not-found" });
+                    setSearchParams({});
+                }
+            } catch (err) {
+                console.error(err);
+                toast.error("讀取失敗，請稍後再試");
+            }
+        };
+        load();
+    }, [id, setSearchParams]);
 
     const handleSync = async () => {
         if (code.length > limits.chars) {
@@ -69,19 +95,23 @@ const EditorPage = () => {
             return;
         }
 
-        if (!id || id === 'new-file') {
-            const q = query(collection(db, "snippets"), where("authorId", "==", user?.uid || "guest"));
+        const isNewFile = !id || id === 'new-file';
+        const isValidId = validateId(id);
+        const targetId = (isNewFile || !isValidId) ? generateSecureId() : id;
+
+        if (isNewFile || !isValidId) {
+            const q = query(
+                collection(db, "snippets"), 
+                where("authorId", "==", user?.uid || "guest")
+            );
             const querySnapshot = await getDocs(q);
             if (querySnapshot.size >= limits.count) {
-                toast.error(`篇數已達上限 (${limits.count} 篇)`, {
-                    icon: '👑',
-                });
+                toast.error(`篇數已達上限 (${limits.count} 篇)`, { icon: '👑' });
                 return;
             }
         }
 
         setStatus('Syncing...');
-        const targetId = (id === 'new-file' || !id) ? `ds-${Math.random().toString(36).slice(2, 9)}` : id;
 
         try {
             const syncPromise = setDoc(doc(db, "snippets", targetId), {
@@ -99,20 +129,22 @@ const EditorPage = () => {
                 error: '同步失敗，請檢查權限。',
             });
 
-            if (id !== targetId) setSearchParams({ id: targetId });
+            if (id !== targetId) {
+                setSearchParams({ id: targetId });
+            }
             setIsDirty(false);
             setStatus('Synced');
             setShowShareModal(true); 
             setTimeout(() => setStatus('Ready'), 2000);
         } catch (err) {
-            console.error("Sync Error:", err);
+            console.error(err);
             setStatus('Sync Error');
         }
     };
 
     const handleLocalSave = useCallback(() => {
         setIsDirty(true);
-        setStatus('Draft Saved (Local)');
+        setStatus('Saved(Local)');
         toast('草稿已暫存！', { icon: '💾' });
         setTimeout(() => setStatus('Ready'), 2000);
     }, []);
@@ -128,7 +160,6 @@ const EditorPage = () => {
 
     const handleEditorDidMount = (editor, monaco) => {
         editorRef.current = editor;
-
         monaco.editor.defineTheme('dev-share-dark', {
             base: 'vs-dark',
             inherit: true,
@@ -140,37 +171,19 @@ const EditorPage = () => {
             }
         });
         monaco.editor.setTheme('dev-share-dark');
-
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
             handleLocalSave();
         });
-
-        editor.onKeyDown((e) => {
-            if (e.keyCode === monaco.KeyCode.Space) {
-                e.stopPropagation(); 
-            }
-        });
-
         setTimeout(() => editor.layout(), 100);
     };
 
-    useEffect(() => {
-        if (id && id !== 'new-file') {
-            const load = async () => {
-                const snap = await getDoc(doc(db, "snippets", id));
-                if (snap.exists()) {
-                    setCode(snap.data().code || '');
-                    setLanguage(snap.data().language || 'javascript');
-                    setIsDirty(false);
-                }
-            };
-            load();
-        }
-    }, [id]);
-
     const shareUrl = `${window.location.origin}/Dev-Share/#/editor?id=${id}`;
 
-    if (loadingAuth) return <div className="h-screen bg-[#050505] flex items-center justify-center font-mono text-white/20 uppercase tracking-widest">Booting Editor...</div>;
+    if (loadingAuth) return (
+        <div className="h-screen bg-[#050505] flex items-center justify-center font-mono text-white/20 uppercase tracking-widest animate-pulse">
+            Booting Editor...
+        </div>
+    );
 
     return (
         <div className="h-screen flex flex-col bg-[#050505] pt-24 pb-6 px-6 overflow-hidden relative">
@@ -212,7 +225,7 @@ const EditorPage = () => {
             </AnimatePresence>
 
             <motion.div initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="glass-panel h-16 rounded-2xl flex items-center justify-between px-6 mb-6 shadow-2xl shrink-0">
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-5 z-10">
                     <button onClick={() => navigate('/')} className="text-white/40 hover:text-blue-400 transition-colors p-2 cursor-pointer transition-all"><ChevronLeft size={24} /></button>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
@@ -224,13 +237,15 @@ const EditorPage = () => {
                     </div>
                 </div>
 
-                <div className="hidden lg:flex items-center gap-3 px-4 py-2 bg-white/5 rounded-xl border border-white/5 max-w-md">
+                <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center gap-3 px-4 py-2 bg-white/5 rounded-xl border border-white/5 w-fit max-w-[30%] xl:max-w-md">
                     <AlertTriangle size={14} className="text-amber-500 shrink-0" />
-                    <span className="text-[11px] text-white/40 font-medium leading-tight">{randomTip}</span>
+                    <span className="text-[12px] text-white/50 font-medium leading-tight">{randomTip}</span>
                 </div>
 
-                <div className="flex items-center gap-6">
-                    <span className="text-[11px] font-mono text-white/40 uppercase tracking-widest">{status}</span>
+                <div className="flex items-center gap-6 z-10">
+                    <div className="w-20 flex justify-end">
+                        <span className="text-[11px] font-mono text-white/40 uppercase tracking-widest">{status}</span>
+                    </div>
                     <button onClick={handleSync} className="bg-blue-600 hover:bg-blue-500 px-8 py-2.5 rounded-xl text-xs font-black shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center gap-2 cursor-pointer text-white">
                         <Zap size={14}/> 上傳至雲端
                     </button>
@@ -271,32 +286,27 @@ const EditorPage = () => {
                                 renderLineHighlight: "all",
                                 selectionHighlight: true,
                                 fixedOverflowWidgets: true,
-                                letterSpacing: 0,
-                                disableLayerHinting: true, 
                                 matchBrackets: "always",
                             }}
                             onMount={(editor, monaco) => {
                                 handleEditorDidMount(editor, monaco);
-
                                 document.fonts.ready.then(() => {
                                     monaco.editor.remeasureFonts();
                                     editor.layout();
                                 });
-
                                 const resizeObserver = new ResizeObserver(() => {
                                     editor.layout();
                                 });
-
                                 const container = editor.getDomNode()?.parentElement;
                                 if (container) resizeObserver.observe(container);
                             }}
                         />
                     </div>
                     <div className="h-10 border-t border-white/5 mt-4 flex items-center justify-between px-2">
-                        <div className="flex gap-8 text-[10px] font-mono uppercase tracking-[0.2em]">
+                        <div className="flex gap-8 text-[11px] font-mono uppercase tracking-[0.2em]">
                             <div className="flex flex-col relative">
-                                <span className="text-white/30">Length</span>
-                                <span className={code.length > limits.chars ? "text-red-500 font-black animate-pulse" : "text-white/40"}>
+                                <span className="text-white/50">Length</span>
+                                <span className={code.length > limits.chars ? "text-red-500 font-black animate-pulse" : "text-white/50"}>
                                     {code.length} / {limits.chars}
                                 </span>
                                 {code.length > limits.chars && (
@@ -306,7 +316,7 @@ const EditorPage = () => {
                                 )}
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-white/30">Engine</span>
+                                <span className="text-white/50">Engine</span>
                                 <span className="text-blue-400 font-black">{language.toUpperCase()}</span>
                             </div>
                         </div>
