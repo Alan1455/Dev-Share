@@ -345,7 +345,7 @@ const EditorPage = () => {
                             <div className="flex flex-col relative">
                                 <span className="text-white/50">Length</span>
                                 <span className={code.length > limits.chars ? "text-red-500 font-black animate-pulse" : "text-white/50"}>
-                                    {code.length} / {limits.chars}
+                                    {code.length.toLocaleString()} / {limits.chars.toLocaleString()}
                                 </span>
                                 {code.length > limits.chars && (
                                     <div className="absolute -top-12 left-0 bg-red-600 text-white px-3 py-1 rounded-md flex items-center gap-2 shadow-xl animate-bounce whitespace-nowrap">
