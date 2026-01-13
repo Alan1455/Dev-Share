@@ -63,7 +63,7 @@ Dev-Share 是一個專為開發者打造的即時代碼分享工具。整合了�
 
 ## 📄 授權
 
-本專案採用 [MIT License](https://github.com/Alan1455/Dev-Share?tab=GPL-3.0-1-ov-file)。
+本專案採用 [GPL-3.0 License](https://github.com/Alan1455/Dev-Share?tab=GPL-3.0-1-ov-file)。
 
 
 ---
