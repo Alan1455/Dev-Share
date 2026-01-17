@@ -43,6 +43,7 @@ const EditorPage = () => {
     const [randomTip, setRandomTip] = useState('');
     const id = searchParams.get('id');
     const editorRef = useRef(null);
+    const timerRef = useRef(null);
 
     const securityTips = useMemo(() => [
         "請勿上傳個人敏感資訊（密碼、私鑰、地址）。",
@@ -83,10 +84,10 @@ const EditorPage = () => {
     const handleEditorChange = async (value) => {
         setCode(value || '');
         setIsDirty(true);
-        if (editorRef.current) {
-            clearTimeout(editorRef.current);
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
         }
-        editorRef.current = setTimeout(async () => {
+        timerRef.current = setTimeout(async () => {
             if (!value || value.trim().length < 20) return;
             setStatus('Ready');
             const detected = await languageDetector.detect(value);
@@ -333,7 +334,7 @@ const EditorPage = () => {
                                     editor.layout();
                                 });
                                 const resizeObserver = new ResizeObserver(() => {
-                                    editor.layout();
+                                    editorRef.current?.layout();
                                 });
                                 const container = editor.getDomNode()?.parentElement;
                                 if (container) resizeObserver.observe(container);
