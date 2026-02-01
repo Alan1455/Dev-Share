@@ -48,18 +48,18 @@ const EditorPage = () => {
     const securityTips = useMemo(() => [
         "請勿上傳個人敏感資訊（密碼、私鑰、地址）。",
         "公開連結可被任何人查看，分享前請務必確認內容。",
-        "建議移除代碼中的 API Keys 或測試環境憑證。",
-        "代碼片段一經上傳，請避免包含商業機密或未授權代碼。",
+        "建議移除Code中的 API Keys 或測試環境憑證。",
+        "Code片段一經上傳，請避免包含商業機密或未授權Code。",
         "養成良好習慣：在分享前將機密資訊環境變數化。",
-        "記得檢查代碼中是否含有內部伺服器的 IP 或網域。",
-        "若這段代碼來自公司專案，請確保您擁有分享權限。",
-        "不要在代碼註解中留下同事或客戶的聯絡方式。",
-        "這是一個公共分享平台，請保持代碼的整潔與禮貌。",
-        "上傳即表示您同意承擔該代碼公開後的相關責任。",
-        "AI 產生的代碼建議在使用前進行人工覆核。",
+        "記得檢查Code中是否含有內部伺服器的 IP 或網域。",
+        "若這段Code來自公司專案，請確保您擁有分享權限。",
+        "不要在Code註解中留下同事或客戶的聯絡方式。",
+        "這是一個公共分享平台，請保持Code的整潔與禮貌。",
+        "上傳即表示您同意承擔該Code公開後的相關責任。",
+        "AI 產生的Code建議在使用前進行人工覆核。",
         "建議在分享複雜邏輯時，加上適當的註解方便他人閱讀。",
-        "定期清理不再需要的雲端代碼片段，保護資訊安全。",
-        "如果這段代碼是您的心血，記得在註解標註原作者資訊。"
+        "定期清理不再需要的雲端Code片段，保護資訊安全。",
+        "如果這段Code是您的心血，記得在註解標註原作者資訊。"
     ], []);
 
     useEffect(() => {
@@ -102,7 +102,7 @@ const EditorPage = () => {
         if (!id || id === 'new-file') return;
         const load = async () => {
             if (!validateId(id)) {
-                toast.error("無效的代碼連結格式", { id: "invalid-id" });
+                toast.error("無效的Code連結格式", { id: "invalid-id" });
                 setSearchParams({});
                 return;
             }
@@ -113,7 +113,7 @@ const EditorPage = () => {
                     setLanguage(snap.data().language || 'javascript');
                     setIsDirty(false);
                 } else {
-                    toast.error("找不到該代碼片段", { id: "not-found" });
+                    toast.error("找不到該Code片段", { id: "not-found" });
                     setSearchParams({});
                 }
             } catch (err) {
@@ -241,7 +241,7 @@ const EditorPage = () => {
                                 </div>
                                 <button onClick={() => setShowShareModal(false)} className="text-white/20 hover:text-white transition-colors p-2"><X size={24}/></button>
                             </div>
-                            <p className="text-sm text-white/50 mb-6 leading-relaxed font-medium">代碼已上傳至雲端。複製下方連結即可與團隊分享：</p>
+                            <p className="text-sm text-white/50 mb-6 leading-relaxed font-medium">Code已上傳至雲端。複製下方連結即可與團隊分享：</p>
                             <div className="flex gap-2 p-2 bg-white/5 border border-white/10 rounded-2xl items-center mb-4 overflow-hidden">
                                 <input readOnly value={shareUrl} className="bg-transparent flex-1 text-xs font-mono px-3 outline-none text-blue-400 truncate" />
                                 <button 

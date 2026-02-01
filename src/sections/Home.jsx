@@ -101,7 +101,7 @@ const Home = () => {
         try {
             await deleteDoc(doc(db, "snippets", deleteTarget));
             setUserSnippets(prev => prev.filter(s => s.id !== deleteTarget));
-            toast.success('代碼已成功刪除');
+            toast.success('Code已成功刪除');
         } catch (error) {
             console.error("Delete failed:", error);
             toast.error('刪除失敗，請檢查權限');
@@ -148,7 +148,7 @@ const Home = () => {
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
                 <h1 className="text-5xl md:text-6xl font-black mb-4 shimmer-text tracking-tighter">Dev-Share</h1>
                 <p className="text-gray-400 text-lg">
-                    {user ? `歡迎回來，${user.displayName}。你的靈感都在這裡。` : "快速編寫、儲存、並分享你的代碼靈感。"}
+                    {user ? `歡迎回來，${user.displayName}。你的靈感都在這裡。` : "快速編寫、儲存、並分享你的Code靈感。"}
                 </p>
             </motion.div>
 
@@ -186,7 +186,7 @@ const Home = () => {
                     <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-all">
                         <Plus className="text-blue-500" size={32} />
                     </div>
-                    <h3 className="text-xl font-bold text-white uppercase tracking-tight">新增代碼</h3>
+                    <h3 className="text-xl font-bold text-white uppercase tracking-tight">新增Code</h3>
                     <p className="text-gray-500 text-[10px] mt-2 font-mono">從空白頁面開始建立</p>
                 </motion.div>
 
@@ -252,12 +252,12 @@ const Home = () => {
 
                 {!user && (
                     <div className="col-span-full py-20 text-center opacity-20 italic font-mono tracking-widest">
-                        — 請登入以查看您儲存過的代碼 —
+                        — 請登入以查看您儲存過的Code —
                     </div>
                 )}
                 {user && !loading && filteredSnippets.length === 0 && (
                     <div className="col-span-full py-20 text-center opacity-20 italic font-mono tracking-widest text-sm">
-                        {searchQuery ? "— 找不到符合條件的代碼 —" : "— 目前沒有儲存任何代碼 —"}
+                        {searchQuery ? "— 找不到符合條件的Code —" : "— 目前沒有儲存任何Code —"}
                     </div>
                 )}
             </div>

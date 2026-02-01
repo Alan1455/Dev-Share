@@ -1,11 +1,11 @@
-# 🚀 Dev-Share | 極簡雲端代碼分享平台
+# 🚀 Dev-Share | 極簡雲端Code分享平台
 
-Dev-Share 是一個專為開發者打造的即時代碼分享工具。整合了高效的編輯體驗、雲端儲存與權限控管，讓代碼分享變得簡單而專業。
+Dev-Share 是一個專為開發者打造的即時Code分享工具。整合了高效的編輯體驗、雲端儲存與權限控管，讓Code分享變得簡單而專業。
 
 
 ## ✨ 核心功能
 
-* **專業編輯體驗**：採用 **Monaco Editor** (VS Code 核心)，支援代碼高亮、自動補全。
+* **專業編輯體驗**：採用 **Monaco Editor** (VS Code 核心)，支援Code高亮、自動補全。
 * **雲端同步 (Cloud Sync)**：整合 **Firebase Firestore**，一鍵上傳並生成永久分享連結。
 * **智能語言偵測**：自動識別 Java, JavaScript, Python, Typescript, C++, C#, Go, Rust 等多種現代語言。
 * **等級與額度系統**：

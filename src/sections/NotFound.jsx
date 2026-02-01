@@ -42,7 +42,7 @@ const NotFound = () => {
                 <h2 className="text-2xl font-bold mb-4 text-white/90">找不到此頁面</h2>
 
                 <p className="text-white/40 mb-10 text-sm leading-relaxed max-w-xs mx-auto">
-                    您嘗試訪問的代碼片段可能已被刪除，或者連結網址有誤。
+                    您嘗試訪問的Code片段可能已被刪除，或者連結網址有誤。
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
